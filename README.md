@@ -1,12 +1,19 @@
+<sub>🌐 <b>中文</b> · <a href="README.en.md">English</a></sub>
+
 <div align="center">
 
 # mathmodels-r
 
 > *「别再用猜的函数名调 R 了——先让环境自检，再让配方库接管。」*
 
-![Skill](https://img.shields.io/badge/Agent%20Skill-mathmodels--r-blueviolet)
-![R](https://img.shields.io/badge/R-4.6.1-276DC3)
-![mathmodels](https://img.shields.io/badge/mathmodels-0.0.14-1f9e89)
+[![Agent Skills](https://img.shields.io/badge/Agent_Skills-mathmodels--r-blueviolet)](SKILL.md)
+[![version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzhjx19%2Fmathmodels-r%2Fmain%2Fversion.json&query=%24.version&label=version&color=blue)](version.json)
+[![R](https://img.shields.io/badge/R-4.6.1-276DC3)](https://www.r-project.org/)
+[![mathmodels](https://img.shields.io/badge/mathmodels-0.0.14-1f9e89)](https://github.com/zhjx19/mathmodels)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![smoke](https://img.shields.io/badge/smoke-35%20passed-brightgreen)](tests/smoke_all_modules.R)
+[![examples](https://img.shields.io/badge/examples-6%2F6%20passed-brightgreen)](tests/run_all_examples.sh)
+[![skills.sh](https://skills.sh/b/zhjx19/mathmodels-r)](https://skills.sh/zhjx19/mathmodels-r)
 
 **把本机 R + mathmodels 包变成可复现的建模算力：一次运行 = 脚本 + 日志 + 表格 + 图形 + 会话信息，论文里每个数字都能指回文件。**
 
@@ -45,15 +52,15 @@
 产物原样存在 `examples/e2e-run/`：
 
 ```text
-▶ run 目录: runs/20261010-233025
 ▶ 退出码  : 0
     - INFO 表格 -> tables/topsis_ranking.csv  20 行 x 4 列
     - INFO TOPSIS 最优对象：R11，得分 100
     - INFO R0 = 1.5；峰值 69.7 人，出现在第 65 天
     - INFO 表格 -> tables/sarima_forecast.csv  12 行 x 4 列
     - INFO t 检验 p 值 = 0.07939
-    [mmr] 完成：6 表, 8 图, 耗时 6.2s
+    [mmr] 完成：6 表, 8 图, 耗时 15.7s
 ```
+（以上逐行取自 [`examples/e2e-run/console.txt`](examples/e2e-run/console.txt)。）
 
 导出的综合评价排名表（`tables/topsis_ranking.csv`，UTF-8+BOM，Excel 双击不乱码）：
 
@@ -95,17 +102,23 @@
 直接定位到该看哪个范例。范例里带 ★ 的坑（如 `LQ()` 必须补"全国合计"行、`basic_SBM()`
 不能传 `orientation`）都写进了各案例的 `README.md`。
 
-一键回归全部 6 个范例：
+一键回归全部范例（6 个案例 + e2e-run）：
 
 ```bash
-bash tests/run_all_examples.sh     # 应输出「6 通过 / 0 失败」
+bash tests/run_all_examples.sh     # 应输出「7 通过 / 0 失败」
 ```
 
 ---
 
 ## 快速开始
 
-这是**本地技能**，放进你的 skills 目录即可（路径随 runtime 而定）：
+一行装（skills.sh / Agent Skills 注册表）：
+
+```bash
+npx skills add zhjx19/mathmodels-r            # skills.sh 一键安装
+```
+
+也可以手工放进你的 skills 目录（路径随 runtime 而定）：
 
 | runtime | 用户技能目录 |
 |---|---|
@@ -202,6 +215,12 @@ export MMR_RSCRIPT="/c/Program Files/R/R-4.5.0/bin/Rscript.exe"
 
 ```
 SKILL.md                    工作流、硬规则、强制停手点、验收单
+README.md / README.en.md    安装前说明（中文 / English）
+CHANGELOG.md                版本记录（讲"为什么改"）
+LICENSE / version.json      MIT 许可；动态版本徽章的取值来源
+test-prompts.json           验收样例：触发是否准确、流程是否被遵守
+.claude-plugin/
+  marketplace.json          Claude Code plugin marketplace 清单
 references/
   recipes.md                选型表 + 签名速查（34 条实测易错点）+ 14 个最小配方
   function-index.md         162 个导出函数索引（从包源机器生成）
@@ -213,10 +232,10 @@ scripts/
   gen_function_index.R      重新生成 function-index.md
 tests/
   smoke_all_modules.R       35 项全模块冒烟测试
-  run_all_examples.sh       一键回归 6 个范例并回收产物
+  run_all_examples.sh       一键回归 6 个范例 + e2e-run，回收前对账产物
 examples/
   index.md                  ★ 路由表：用户问法 / 函数 → 该看哪个范例
-  data/                     8 份真实数据（书稿案例原样打包，172 KB）
+  data/                     8 份真实数据（书稿案例原样打包，约 145 KB）
   cases/                    6 个实跑通过的范例（各含 script.R + README.md + 真实产物）
   e2e-run/                  一次真实运行的完整产物
   smoke-report.md           冒烟测试报告
@@ -233,7 +252,7 @@ Rscript --vanilla scripts/check_env.R
 # 全模块冒烟（应输出「35 项通过，0 项失败」，退出码 0）
 bash scripts/run_r.sh tests/smoke_all_modules.R
 
-# 6 个范例全量回归（应输出「6 通过 / 0 失败」，并把产物回收进各案例目录）
+# 范例全量回归（6 个案例 + e2e-run，应输出「7 通过 / 0 失败」，并把产物回收进各案例目录）
 bash tests/run_all_examples.sh
 
 # 端到端样例（应退出码 0，run 目录里有 6 表 8 图）

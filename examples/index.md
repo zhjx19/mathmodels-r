@@ -2,7 +2,7 @@
 
 **用法**：先在这个表里按用户的问题找命中行；命中就**以该案例的 `script.R` 为蓝本**改，
 不要凭记忆写包函数调用。**每个案例都在本机 mathmodels 0.0.14 上实跑通过**
-（`bash tests/run_all_examples.sh` → 6 通过 / 0 失败），目录里躺着真实的
+（`bash tests/run_all_examples.sh` → 7 通过 / 0 失败），目录里躺着真实的
 `log.md` / `tables/*.csv` / `figs/*.pdf`，可以对着核对列名与图的样子。
 
 > 2026-10-11 起，这些案例是按**上游修复后重装的 0.0.14** 重新校验的（`fuzzy_eval` 算子 5、

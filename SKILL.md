@@ -1,8 +1,8 @@
 ---
 name: mathmodels-r
-description: |
-  把本机 R 与 mathmodels 包当作数学建模的算力层：先做环境自检，再按建模任务选方法，
-  生成可复现的 R 脚本，用本地 Rscript 跑出表格、图形与日志。
+description: >-
+  Use when 用户要在一台装了 R 的机器上用 mathmodels 包做数学建模计算：先做环境自检，
+  再按建模任务选方法，生成可复现的 R 脚本，用本地 Rscript 跑出表格、图形与日志。
   覆盖综合评价（AHP/熵权/CRITIC/TOPSIS/模糊/RSR/DEA/灰关联）、预测（灰色/Markov/回归/时间序列）、
   微分方程与传染病模型、多元统计（PCA/EFA/聚类/判别/对应分析/MDS）、数据清洗与统计推断。
   每次运行落成一个 run 目录（脚本 + 日志 + tables/ + figs/ + sessionInfo），论文里每个数字可回溯。
@@ -16,6 +16,12 @@ description: |
   撰写 mathmodels 使用指南 .qmd 初稿（用 zhang-style）、
   纯 R 包开发/改源码/发版（用 R 包开发流程）、
   与本机 R 无关的通用数据分析问答。
+related-skills:
+  - math-modeling-flow
+  - zhang-style
+compatibility: claude-code, zcode, opencode, codex
+metadata:
+  version: "1.0"
 ---
 
 # mathmodels-r · 本地 R 驱动的数学建模
@@ -223,8 +229,9 @@ mmr_finish(notes = "一句话结论")
 - [ ] `grep -c "^TRUE" log.md` = 0；
 - [ ] 关键结论数字能在 `tables/` 或 `log.md` 里指出来源；
 - [ ] 若改了包相关代码，重跑 `bash scripts/run_r.sh tests/smoke_all_modules.R`，35 项全过。
-- [ ] 若新增 / 修改了 `examples/cases/` 下的脚本，跑 `bash tests/run_all_examples.sh`，
-      应输出「6 通过 / 0 失败」（产物会自动回收进各案例目录）。
+- [ ] 若新增 / 修改了 `examples/` 下的脚本，跑 `bash tests/run_all_examples.sh`，
+      应输出「7 通过 / 0 失败」（6 个案例 + e2e-run；回收前会自动对账产物清单、
+      路径可移植性与 LF，产物回收进各案例目录）。
 
 ---
 
@@ -232,6 +239,11 @@ mmr_finish(notes = "一句话结论")
 
 ```
 SKILL.md                         本文件：工作流、硬规则、停手点、验收单
+README.md / README.en.md         安装前说明（中文 / English）
+CHANGELOG.md                     版本记录（讲"为什么改"，不只"改了什么"）
+LICENSE / version.json           MIT 许可；动态版本徽章的取值来源
+test-prompts.json                验收样例：触发是否准确、流程是否被遵守
+.claude-plugin/marketplace.json  Claude Code plugin marketplace 清单
 references/
   r-environment.md               本地 R 环境与编码地雷清单（每条附现象/根因/做法）
   function-index.md              全 API 索引（机器生成，勿手改）
@@ -243,10 +255,11 @@ scripts/
   gen_function_index.R           从包源重新生成 function-index.md
 tests/
   smoke_all_modules.R            35 项全模块冒烟测试（本 skill 的验证资产）
-  run_all_examples.sh            一键回归：跑通 examples/cases/ 全部范例并回收产物
+  run_all_examples.sh            一键回归：跑通 examples/ 全部范例（含 e2e-run），
+                                 回收前对账（产物清单 / 路径可移植 / LF）
 examples/
   index.md                       ★ 路由表：用户问法 / 包函数 → 该看哪个案例（工作流第一步查）
-  data/                          8 份真实数据（书稿案例原样打包，172 KB）
+  data/                          8 份真实数据（书稿案例原样打包，约 145 KB）
   cases/                         6 个实跑通过的范例，每个含 script.R + README.md + 真实产物
     01-comp-eval/                综合评价：多种赋权 + AHP + 组合赋权 + TOPSIS
     02-fuzzy-eval/               模糊评价：11 个 mf_* + 模糊合成 + 去模糊 + 模糊统计
