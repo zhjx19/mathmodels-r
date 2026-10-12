@@ -12,7 +12,7 @@
 [![mathmodels](https://img.shields.io/badge/mathmodels-0.0.14-1f9e89)](https://github.com/zhjx19/mathmodels)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![smoke](https://img.shields.io/badge/smoke-35%20passed-brightgreen)](tests/smoke_all_modules.R)
-[![examples](https://img.shields.io/badge/examples-6%2F6%20passed-brightgreen)](tests/run_all_examples.sh)
+[![regression](https://img.shields.io/badge/regression-7%20passed-brightgreen)](tests/run_all_examples.sh)
 [![skills.sh](https://skills.sh/b/zhjx19/mathmodels-r)](https://skills.sh/zhjx19/mathmodels-r)
 
 **Turn your local R plus the `mathmodels` package into a reproducible modelling workbench: one run = script + log + tables + figures + session info, and every number in your paper points back to a file.**

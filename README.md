@@ -12,7 +12,7 @@
 [![mathmodels](https://img.shields.io/badge/mathmodels-0.0.14-1f9e89)](https://github.com/zhjx19/mathmodels)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![smoke](https://img.shields.io/badge/smoke-35%20passed-brightgreen)](tests/smoke_all_modules.R)
-[![examples](https://img.shields.io/badge/examples-6%2F6%20passed-brightgreen)](tests/run_all_examples.sh)
+[![regression](https://img.shields.io/badge/regression-7%20passed-brightgreen)](tests/run_all_examples.sh)
 [![skills.sh](https://skills.sh/b/zhjx19/mathmodels-r)](https://skills.sh/zhjx19/mathmodels-r)
 
 **把本机 R + mathmodels 包变成可复现的建模算力：一次运行 = 脚本 + 日志 + 表格 + 图形 + 会话信息，论文里每个数字都能指回文件。**
