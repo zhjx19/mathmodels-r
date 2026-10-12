@@ -10,6 +10,9 @@
 #     绝不在未注册字体时使用 showtext_auto()——那会把中文全变成方框。
 #   * 文本数据一律 UTF-8 落盘；CSV 带 BOM，便于 Excel 直接双击打开不乱码。
 #   * 一切可见产物都写文件，不依赖控制台回显（控制台编码不可靠）。
+#   * 文本产物一律 LF 落盘（二进制连接写 "\n"），且 log.md 里不写本机绝对路径——
+#     这两条保证 run 目录在 Windows/Linux 上逐字节一致、可直接入库当交付物。
+#     实现见下方 mmr_write_lines_lf() 与 mmr_portable_path()。
 #
 # 兼容：R >= 4.1。无外部依赖（ggplot2 只在画图时按需调用）。
 # ============================================================================
@@ -23,6 +26,31 @@ MMR$t0        <- Sys.time()
 MMR$tables_written <- character()
 MMR$figs_written   <- character()
 MMR$pdf_family     <- Sys.getenv("MMR_PDF_FAMILY", "Microsoft YaHei")
+
+# ---- 落盘与路径：两条纪律，保证产物可移植、跨平台逐字节一致 ------------------
+# 1) 一律 LF 落盘。R 在 Windows 上用文本连接（file(open = "wt"/"at")）写文件会产出
+#    CRLF，导致同一份产物在 Windows/Linux 字节不同、git 里反复显示「已修改」。
+#    所以这里统一用二进制连接 + 显式 "\n"。
+# 2) log.md 里不写本机绝对路径（换机器/换目录后仍可核对、也不会泄露私有路径）。
+#    运行目录在 skill 内时记成 <skill>/...，否则记成 <run>/<basename>。
+mmr_write_lines_lf <- function(text, path, append = FALSE) {
+  con <- file(path, open = if (append) "ab" else "wb")
+  on.exit(close(con), add = TRUE)
+  writeLines(text, con, sep = "\n", useBytes = TRUE)
+  invisible(path)
+}
+
+mmr_portable_path <- function(path) {
+  p <- normalizePath(path, mustWork = FALSE, winslash = "/")
+  home <- Sys.getenv("MMR_HOME", "")
+  if (nzchar(home)) {
+    home <- normalizePath(home, mustWork = FALSE, winslash = "/")
+    if (identical(substring(p, 1L, nchar(home)), home)) {
+      return(paste0("<skill>", substring(p, nchar(home) + 1L)))
+    }
+  }
+  paste0("<run>/", basename(p))
+}
 
 # ---- 初始化 ----------------------------------------------------------------
 # run_dir: run 目录；留空则用当前工作目录（run_r.sh 已 cd 到 run 目录）
@@ -49,7 +77,7 @@ mmr_init <- function(run_dir = NULL, label = "") {
     }
   })
 
-  writeLines(c(
+  mmr_write_lines_lf(c(
     sprintf("# 运行日志"),
     "",
     sprintf("- 时间：%s", format(MMR$t0, "%Y-%m-%d %H:%M:%S")),
@@ -57,9 +85,9 @@ mmr_init <- function(run_dir = NULL, label = "") {
     sprintf("- R 版本：%s", R.version.string),
     sprintf("- mathmodels：%s",
             tryCatch(as.character(utils::packageVersion("mathmodels")), error = function(e) "未安装")),
-    sprintf("- 工作目录：%s", MMR$dir),
+    sprintf("- 工作目录：%s", mmr_portable_path(MMR$dir)),
     ""
-  ), MMR$log_file, useBytes = TRUE)
+  ), MMR$log_file)
   invisible(MMR$dir)
 }
 
@@ -69,7 +97,7 @@ mmr_init <- function(run_dir = NULL, label = "") {
 mmr_log <- function(..., level = "INFO") {
   msg <- paste0(...)
   line <- sprintf("- [%s] %s %s", format(Sys.time(), "%H:%M:%S"), level, msg)
-  cat(line, "\n", sep = "", file = MMR$log_file, append = TRUE)
+  mmr_write_lines_lf(line, MMR$log_file, append = TRUE)
   cat(line, "\n", sep = "")            # 同时回显，便于 run_r.sh 的 console.txt
   invisible(msg)
 }
@@ -130,17 +158,16 @@ mmr_fig <- function(plot, name, width = 7, height = 4.5, dpi = 300,
 # ---- 收尾 ------------------------------------------------------------------
 mmr_finish <- function(notes = NULL) {
   el <- as.numeric(difftime(Sys.time(), MMR$t0, units = "secs"))
-  con <- file(MMR$log_file, open = "at", encoding = "UTF-8")
-  writeLines(c(
+  mmr_write_lines_lf(c(
     "",
     "## 产物清单",
     if (length(MMR$tables_written)) paste0("- 表格：", paste(MMR$tables_written, collapse = ", ")) else "- 表格：（无）",
     if (length(MMR$figs_written))   paste0("- 图形：", paste(MMR$figs_written,   collapse = ", ")) else "- 图形：（无）",
     sprintf("- 耗时：%.1f 秒", el),
     if (!is.null(notes)) c("", "## 备注", paste0("- ", notes)) else NULL
-  ), con, useBytes = TRUE)
-  close(con)
-  writeLines(utils::capture.output(utils::sessionInfo()), file.path(MMR$dir, "sessionInfo.txt"), useBytes = TRUE)
+  ), MMR$log_file, append = TRUE)
+  mmr_write_lines_lf(utils::capture.output(utils::sessionInfo()),
+                     file.path(MMR$dir, "sessionInfo.txt"))
   cat(sprintf("\n[mmr] 完成：%d 表, %d 图, 耗时 %.1fs\n", length(MMR$tables_written), length(MMR$figs_written), el))
   invisible(TRUE)
 }
