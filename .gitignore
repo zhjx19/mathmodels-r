@@ -1,0 +1,7 @@
+# 运行产物（scratch，不入版本库）
+/runs/
+/tests/runs/
+/.example-runs/
+
+# SkillHub 构建输出
+/dist/

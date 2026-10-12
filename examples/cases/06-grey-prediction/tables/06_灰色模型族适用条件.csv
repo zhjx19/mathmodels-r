@@ -1,0 +1,5 @@
+﻿"模型","函数","适用数据形态","本包返回字段"
+"GM(1,1)","GM11()","单调、近似指数增长的少数据序列","fitted / pnext / f / lambda / rng"
+"GM(1,N)","GM1N()","被预测量受若干相关因素驱动","fitted / pred / C / P / f"
+"DGM(2,1)","DGM21()","非单调、有明显摆动的序列","fitted / pnext / f / mat / u"
+"Verhulst","verhulst()","有饱和上限的 S 形过程","fitted / pnext / f / mat / u"

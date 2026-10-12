@@ -1,0 +1,82 @@
+{
+  "skill": "mathmodels-r",
+  "version": "0.1.0",
+  "description": "验收样例：每条给出用户真实会说的话、期望动作与合格判据。用于回归检查 skill 触发是否准确、流程是否被遵守。",
+  "prompts": [
+    {
+      "id": "TP-01",
+      "prompt": "用 mathmodels-r 帮我做多指标综合评价：熵权法定权，再用 TOPSIS 排序，导出排名表和中文图",
+      "expect_actions": [
+        "先运行 scripts/check_env.R 并确认全绿",
+        "在 references/recipes.md 的选型表定位「多对象 × 多指标，要排序」",
+        "按配方 1 写脚本：rescale_middle/rescale_interval 预处理 -> weight_entropy(index 含 NA) -> topsis(index 只含 +/-)",
+        "用 run_r.sh 运行，产物落在 run 目录",
+        "报出最高分对象、得分与产物路径"
+      ],
+      "must_avoid": [
+        "把 topsis() 的 index 写成含 NA 的向量",
+        "直接调用 Rscript 而不清 LC_*",
+        "只回显控制台不落文件"
+      ],
+      "pass_criteria": "退出码 0；tables/ 有排名表且中文表头正常；figs/ 同出 png 与 pdf；pdf 打开中文不是方框；log.md 无 TRUE 噪声"
+    },
+    {
+      "id": "TP-02",
+      "prompt": "帮我用 R 做一个 SIR 传染病模型，算出 R0 和峰值，把曲线图存下来",
+      "expect_actions": [
+        "使用 ode_sir(init, params, times) 统一接口",
+        "用 epi_metrics() 取 R0 / peak_infection / peak_time / attack_rate（字段名是 peak_infection）",
+        "用 mmr_fig() 导出 plot_compartments() 与 plot_incidence()"
+      ],
+      "must_avoid": [
+        "写成 m$peak（正确字段是 m$peak_infection）",
+        "用 ggsave(\"x.pdf\") 默认设备出图",
+        "把 Lotka-Volterra 的分区写成 prey/predator（ode_lv 用 x/y）"
+      ],
+      "pass_criteria": "数值合理（R0 > 1 时出现峰值）；图中中文正常；R0 与峰值可回溯到 tables/ 或 log.md"
+    },
+    {
+      "id": "TP-03",
+      "prompt": "这份月度销量数据有缺失和异常值，先清洗再用 SARIMA 预测未来 12 个月",
+      "expect_actions": [
+        "先 na_summary()/na_mcar_test() 诊断，再 impute*()/outlier() 处理，最后才建模",
+        "用 as_ts_df() 转换并保证 ts_df 完整无缺失",
+        "ts_test() 判平稳 -> ts_transform() -> ts_sarima() -> ts_forecast(h = 12) -> ts_back_transform()",
+        "导出预测表（含 80/95 区间）与预测图"
+      ],
+      "must_avoid": [
+        "跳过清洗直接建模",
+        "把含缺失的 ts_df 直接送进 ts_sarima()",
+        "预测值停在变换尺度不还原"
+      ],
+      "pass_criteria": "输出清洗前后对照与异常清单；预测表含区间列；结论说明是否已还原到原尺度"
+    },
+    {
+      "id": "TP-04",
+      "prompt": "R 脚本报错了：index must contain only \"+\" and \"-\"，帮我看看",
+      "expect_actions": [
+        "判断是 topsis()/grey_corr_topsis() 与赋权族的 index 约定不同",
+        "改为：赋权函数用含 NA 的 index，topsis 用只含 +/- 的 index",
+        "必要时先用 rescale_middle()/rescale_interval() 把中心型/区间型指标转正向"
+      ],
+      "must_avoid": [
+        "逐个试函数名猜参数",
+        "把 NA 从指数去掉后直接跑 topsis（中心型指标方向仍有问题）"
+      ],
+      "pass_criteria": "明确说出两套 index 约定的区别，并给出可直接替换的两行代码"
+    },
+    {
+      "id": "TP-05",
+      "prompt": "这个建模任务涉及拆题、写论文和 LaTeX 排版，你直接用 mathmodels-r 全做了吧",
+      "expect_actions": [
+        "说明本 skill 只负责「本地 R 算力层」（选型、编码、跑脚本、出产物）",
+        "建议流程编排交给 math-modeling-flow，并询问是否切换"
+      ],
+      "must_avoid": [
+        "硬撑着把拆题、论文、排版全揽下来",
+        "不说明职责边界就直接开始"
+      ],
+      "pass_criteria": "明确划出边界并给出切换建议，不越界执行"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+# 统一换行符：所有文本文件在版本库与工作区一律 LF
+# （R 在 Windows 上用文本连接写 log.md / sessionInfo.txt 会产出 CRLF，
+#   这里从源头兜住跨平台一致性——见 scripts/mmr.R 的二进制写入）
+* text=auto eol=lf
+
+# 数据与二进制产物：不做任何转换（CSV 带 BOM，逐字节保留）
+*.xlsx -text
+*.pdf  -text
+*.png  -text
