@@ -11,7 +11,7 @@
 > `references/recipes.md` 第四节「上游修复记录」。
 
 **为什么要有这些范例**：包在 0.0.13/0.0.14 更过一轮函数名，配套在线书
-`mathmodels-book` 里仍是旧名；而书稿与建模文章合计只演示了包的一部分函数，
+`mathmodels-book` 的书稿快照（截至 2026-10）仍是旧名；而书稿与建模文章合计只演示了包的一部分函数，
 `weight_entropy` / `weight_critic` / `weight_cv` 三个最高频赋权函数与 11 个
 `mf_*` 隶属函数在**任何素材里都没有正确示例**。这 6 个案例就是把这些缺口补上。
 
@@ -80,7 +80,8 @@
 ## 四、怎么用（对 AI 的硬要求）
 
 1. 命中案例后，**先读该案例的 `script.R` 与 `README.md`**，再动手改；
-2. **不要**直接照搬书稿 `mathmodels-book` 的函数名——那里有旧名（`entropy_weight` /
+2. **不要**直接照搬书稿 `mathmodels-book` 的函数名——那里的书稿快照（截至 2026-10）
+   仍是旧名（`entropy_weight` /
    `critic_weight` / `cv_weight` / `pca_weight` / `tri_mf` 全套 / `model_sir` 全套）；
 3. 改完跑 `bash scripts/run_r.sh <你的脚本.R>`，退出码必须为 0；
 4. 案例里带 ★ 的坑都写在 `README.md` 的「踩过的坑」一节，动手前先看一遍；

@@ -78,7 +78,7 @@
 ## 六个可直接套用的范例
 
 书稿与文章里**没有正确示例**的高频函数（`weight_entropy` / `weight_critic` / `weight_cv`、
-11 个 `mf_*` 隶属函数……）在下面 6 个范例里都补齐了。**每个都在本机 mathmodels 0.0.14
+11 个 `mf_*` 隶属函数……，截至 2026-10 的书稿快照）在下面 6 个范例里都补齐了。**每个都在本机 mathmodels 0.0.14
 上实跑通过**，目录里躺着真实的 `log.md` 与 `tables/*.csv`，可对着核对列名与图的样子。
 
 | 范例 | 解决什么 | 覆盖函数 | 产物 |
@@ -104,16 +104,21 @@ bash tests/run_all_examples.sh     # 应输出「6 通过 / 0 失败」
 
 ## 快速开始
 
-这是**本地技能**，装到 WorkBuddy 的用户技能目录即可：
+这是**本地技能**，放进你的 skills 目录即可（路径随 runtime 而定）：
+
+| runtime | 用户技能目录 |
+|---|---|
+| OpenCode | `~/.config/opencode/skills/` |
+| Claude Code | `~/.claude/skills/` |
 
 ```bash
-cp -r <本目录> ~/.workbuddy/skills/mathmodels-r
+cp -r <本目录> ~/.config/opencode/skills/mathmodels-r
 ```
 
 装完先做环境自检：
 
 ```bash
-Rscript --vanilla ~/.workbuddy/skills/mathmodels-r/scripts/check_env.R
+Rscript --vanilla ~/.config/opencode/skills/mathmodels-r/scripts/check_env.R
 ```
 
 装完对 Agent 说：
@@ -165,7 +170,7 @@ export MMR_RSCRIPT="/c/Program Files/R/R-4.5.0/bin/Rscript.exe"
 
 | 维度 | 一般做法 | 本 skill |
 |---|---|---|
-| 函数调用正确性 | 靠记忆或照抄在线书（书里还是 0.0.9 的旧函数名） | 机器生成的 API 索引 + 一张 34 条「签名速查」+ 6 个实跑范例，全部经实跑校对 |
+| 函数调用正确性 | 靠记忆或照抄在线书（书稿快照截至 2026-10 仍是旧函数名） | 机器生成的 API 索引 + 一张 34 条「签名速查」+ 6 个实跑范例，全部经实跑校对 |
 | 中文绘图 | 默认设备出 PDF，中文变方框仍被当成成功 | PNG 走默认设备、PDF 强制 `cairo_pdf` + `Microsoft YaHei`；两种格式同时导出 |
 | 中文编码 | 反复改代码，或给脚本加 BOM / 传 `--encoding=UTF-8`（实测都报错） | 运行器统一清 `LC_*` 环境变量——这是唯一实测有效的解法 |
 | 可复现性 | 控制台回显 + 手工另存 | 每次运行一个 run 目录，脚本/日志/表格/图/会话信息成套落盘 |

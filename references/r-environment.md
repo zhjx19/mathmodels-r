@@ -30,8 +30,9 @@ export MMR_RSCRIPT="/c/Program Files/R/R-4.5.0/bin/Rscript.exe"
 Error: unexpected symbol in ...
 ```
 
-或中文路径被静默截断——`"D:/WorkBuddy/mathmodels技能/..."` 变成
-`'D:/WorkBuddy/mathmodelsf'`，报 `cannot open file ...: Permission denied`。
+或中文路径被静默截断——`"D:/my-project/建模数据/raw.csv"` 变成
+`'D:/my-project/mathmodelsf'`，报 `cannot open file ...: Permission denied`。
+（截断点落在多字节字符中间，于是路径尾巴被吃掉。）
 
 **根因**：Git Bash 会把 `LANG` / `LC_ALL` / `LC_CTYPE` / `LC_COLLATE` 导出成
 `C.UTF-8`。Windows 版 R 不认这些 POSIX locale，启动时先失败（那串

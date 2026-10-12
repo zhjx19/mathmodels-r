@@ -31,9 +31,11 @@ description: |
 （用户问法 → 命中哪个已实跑通过的案例），命中就照案例改；没命中再到
 `references/recipes.md` 的选型表定位。**不要凭记忆写 mathmodels 的函数调用**——包在
 0.0.13/0.0.14 有过一轮函数更名（`entropy_weight` → `weight_entropy`、`tri_mf` → `mf_tri`、
-`model_sir` → `ode_sir`），**配套在线书 `mathmodels-book` 里还是旧名，照抄会报错**。
+`model_sir` → `ode_sir`），**配套在线书 `mathmodels-book` 的书稿快照（截至 2026-10）仍是旧名，
+照抄会报错**。
 签名以 `references/function-index.md`（机器生成）和 `references/recipes.md` 的
-「签名速查」为准。
+「签名速查」为准。书稿更新为 v0.0.14 命名后，本 skill 里各处「书里还是旧名」提示
+即作废，需逐条复核——完整清单见 §9 维护约定。
 
 **结论必须有产物。** 每次运行都落成一个 run 目录，论文里的每个数字都能指到
 `tables/*.csv` 或 `log.md`。
@@ -77,7 +79,8 @@ cairo_pdf、系统中文字体、中文字面量解析、flextable）。任一 `
 ```
 
 > **为什么第一步要查路由表**：这 6 个案例是**在 mathmodels 0.0.14 上实跑通过**的，
-> 每个都锚定了书稿与建模文章里**没有正确示例**的函数（`weight_entropy` / `weight_critic` /
+> 每个都锚定了书稿与建模文章里**没有正确示例**的函数（截至 2026-10 的书稿快照；
+> `weight_entropy` / `weight_critic` /
 > `weight_cv` / 11 个 `mf_*` …），并把踩过的坑写成可执行断言。**照抄案例远比凭记忆写函数调用可靠。**
 > 命中案例后，先读该案例的 `README.md`（「踩过的坑」一节尤其重要）与 `script.R`，再动手改。
 
@@ -160,7 +163,8 @@ mmr_finish(notes = "一句话结论")
 9. **`weight_entropy()$s` 已在 0–100 量纲**（实测二级得分 10 ~ 98），
    **不要再乘 100**，否则综合评价得分虚高到几千分。
 10. **`basic_SBM()` 是非导向模型，不能传 `orientation`**（v0.0.14 起），否则报
-    `SBM models are non-oriented`——`mathmodels-book` 的 `dea.qmd` 照抄会报错。
+    `SBM models are non-oriented`——`mathmodels-book` 的 `dea.qmd`（截至 2026-10 的书稿
+    快照）照抄会报错。
 11. **`LQ()` 每组第一行必须是"全国合计"行**（源码 `x[-1] / x[1]` 拿它当分母并删除）。
     只传真实地区会**静默错算**且不报错——务必补全国行 + `stopifnot` 守卫 + 手工对拍。
 12. **`markov_chain()` 的 `trans_mat` 是 `table`、`pred_probs` 是 `matrix`**：`table` 走
@@ -267,3 +271,18 @@ examples/
 - 新增易错点时，同时写进 `references/r-environment.md`（环境类）或
   `recipes.md` 的「签名速查」（接口类），并补一条冒烟断言。
   写之前先分清**是包的缺陷、还是 Rd 已声明的调用者责任**——两者在速查表里标注方式不同。
+- **书稿 `mathmodels-book` 更新为 v0.0.14 命名后**：本 skill 里那些「书里还是旧名 /
+  书稿需改」的提示即作废，逐条复核并删改以下 7 处（截至 2026-10 快照成立）：
+  `SKILL.md` §0 心法（旧名提示）、`SKILL.md` 硬规则 10（`dea.qmd` 的 SBM）、
+  `SKILL.md` 反例黑名单 1、`examples/index.md` §「为什么要有这些范例」与 §四 硬要求 2、
+  `references/recipes.md` 签名速查「旧版函数名已更名」行、`references/recipes.md`
+  第四节「仍按其契约使用」末条、`examples/cases/03-dea-efficiency/README.md` 踩坑 1；
+  另复核 `README.md` 对比表「函数调用正确性」行与「六个可直接套用的范例」前言。
+- **提交任何 `examples/**` 产物前对账**（`tests/run_all_examples.sh` 已自动执行这三条）：
+  ① `log.md` 的「产物清单」逐条在 `tables/`·`figs/` 里存在；② 产物里无本机家目录路径、
+  无盘符绝对 run 目录；③ 文本产物为 LF。
+  **稳定性分级（实测）**：表格 CSV 与 PNG 字节稳定；`log.md`/`meta.txt`/`console.txt`
+  含时间戳、`*.pdf` 内嵌 Cairo 创建时间与文档 ID，每次重跑都会变。
+  只想复核、不改产物时，用
+  `git checkout -- 'examples/**/figs/*.pdf' 'examples/**/log.md' 'examples/**/meta.txt' 'examples/**/console.txt'`
+  丢弃这批字节差异。

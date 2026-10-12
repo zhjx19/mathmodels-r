@@ -52,7 +52,7 @@
 | `rank_sum_ratio()` 的数据**必须带 `ID` 列** | 缺 ID 列会报 `object 'ID' not found`。 |
 | `gini(y, pop)` / `theil(y, pop)` 的 `pop` 必填 | 不传报 `argument "pop" is missing`。`theil_g(data, group, y, pop)` 的 `group`/`y`/`pop` 传**列名字符串**，不传列向量。 |
 | DEA 是「数据框 + 列名」接口 | `basic_DEA(data, inputs = c("x1","x2"), outputs = c("y1","y2"))`；返回字段是 **`efficiencies`（复数）**，不是 `efficiency`。`data` 必须是 data.frame 且**第 1 列是 DMU 名**，传 `matrix` 直接报错。 |
-| ★ `basic_SBM()` 是**非导向**模型 | v0.0.14 起 **不能传 `orientation`**，否则报 `SBM models are non-oriented; orientation is not applicable.`（`mathmodels-book` 的 `dea.qmd` 照抄会报错）。非期望产出用 `ud_outputs =` 指定在 outputs 里的第几列。 |
+| ★ `basic_SBM()` 是**非导向**模型 | v0.0.14 起 **不能传 `orientation`**，否则报 `SBM models are non-oriented; orientation is not applicable.`（`mathmodels-book` 的 `dea.qmd`，截至 2026-10 的书稿快照，照抄会报错）。非期望产出用 `ud_outputs =` 指定在 outputs 里的第几列。 |
 | ★ 超效率 `super_DEA()$efficiencies` 可能是 `NA` | 部分 DMU 线性规划无可行解是固有现象，**必须显式补齐**（常用标准 BCC 效率填充），否则排序会**漏掉**这些 DMU。**0.0.14 起 `basic_DEA()` / `super_DEA()` 在求解器失败时会汇总告警**（列出 DMU 名）——但告警**不会替你填值**。**触发条件已定位**：只有 `super_DEA` + `rts = "vrs"` + 存在极端 DMU（产出高到其余单元的**凸**组合够不着）才会发生；`crs` 的锥形包络可无限放大，**永不失效**；`basic_DEA` 参考集含自身（`theta = 1, lambda = e_i` 恒可行），真实数据打不到该分支，那里的告警纯属防御。可复现例见案例 03。 |
 | ★ `LQ(data, region, total, .cols, .by)` 每组**第一行必须是"全国合计"行** | 源码 `quotient = function(x) x[-1] / x[1]` 拿组内第一行当分母并从输出中删除。只传真实地区会**静默错算**（实测 31 省 → 返回 30 行、上海被当参照删掉，且**没有任何一个省的 LQ 与正确值一致**、最大偏差 0.42）——务必补全国行 + `stopifnot(grepl("全国", first_rows))` 守卫 + 手工公式对拍。**注：Rd `\details` 已声明该要求（并点名 "silently wrong"），属调用者责任，不是包的缺陷。** `region`/`total`/`.cols` 走 tidyselect（传列名符号），`.cols` 要指向**数值列**。 |
 | ★ `theil_g2_nest()` 的 `ratio` 与 `theil` **不等长**（`theil` = 4 + G1 + K，`ratio` = 4 + 2·G1 + K，K = 实际出现的 group1×group2 组合数；嵌套数据里 K = Σ 各 group1 内的 group2 个数，**不是** G1·G2） | 实测 income.xlsx（G1 = 4 区域、K = 31 地区）泰尔 39 项 / 贡献率 43 项，**差值恰为 G1 = 4**。**0.0.14 已修**：多出的"各一级分组的组内总贡献"块改名为 `东北.within` / `东部.within` …（不再与前面的组间项重名，且取值已按组正确折叠——此前该块每组拿到的都是全局合计）。**仍不能按名或按位置对齐**（两向量长度不同）——按名单独取（`ratio[grepl("\\.within$", names(ratio))]`），或把 `theil`/`ratio` 各自转长表。表内列名是 `T`/`Tb_g1`/`Tb_g2`/`Tw`（**不是** `Tb`），分组项用 `"_"` 拼成 `东部_上海` 这种形式，不是"组间""组内"。贡献率只有 `Tb_g1+Tb_g2+Tw`（嵌套）或 `Tb+Tw`（单/交叉）等于 1，不能整体求和（含 `T=1`）。⚠️ 单分组 `theil_g()` 与交叉 `theil_g2_cross()` 的 `theil`/`ratio` 是**等长**的——只有嵌套的 `theil_g2_nest()` 不等长。 |
@@ -80,7 +80,7 @@
 | `markov_chain()` 返回 4 个字段 | `trans_mat`（**contingency table**，`dimnames` 名 `from`/`to`）/ `pred_probs`（**matrix**，行名 `T1..Tn`）/ `pred_states`（逐步最可能状态）/ `pi_final`（终态分布）。**0.0.14 已给 `trans_mat` 的 `dimnames` 命名**，`as_tibble(trans_mat, rownames = "从\\到")` 不再报 `Names can't be empty`（但会把 dimnames 名当列名，产生**重复的 `from` 列**）。**最稳的转换仍是** `tibble::rownames_to_column(as.data.frame(x, check.names = FALSE), var = "从\\到")`；`pred_probs` 是普通 `matrix`，`as_tibble()` 会静默丢行名。 |
 | ★ `GM11_markov()` 返回表末尾 `T+1..T+k` 行 `Raw` 为空 | 外推期没有真值：算误差均值要 `na.rm = TRUE`，作图先 `filter(!is.na(Raw))`，否则 ggplot 出 `Removed n rows` 警告。 |
 | ★ `as_tibble()` **静默丢弃行名** | 要用行名当第一列，必须**先 `tibble::rownames_to_column(d, var = "...")` 再 `as_tibble()`**；顺序反了会得到 `1,2,3` 而非真实标签。 |
-| 旧版函数名已更名 | `entropy_weight`→`weight_entropy`、`critic_weight`→`weight_critic`、`cv_weight`→`weight_cv`、`pca_weight`→`weight_pca`；`tri_mf`→`mf_tri` 等全套 `mf_*`；`model_sir`→`ode_sir` 等全套 `ode_*`。**在线书 `mathmodels-book` 里还是旧名，抄代码要先换名。** |
+| 旧版函数名已更名 | `entropy_weight`→`weight_entropy`、`critic_weight`→`weight_critic`、`cv_weight`→`weight_cv`、`pca_weight`→`weight_pca`；`tri_mf`→`mf_tri` 等全套 `mf_*`；`model_sir`→`ode_sir` 等全套 `ode_*`。**在线书 `mathmodels-book` 的书稿快照（截至 2026-10）仍是旧名，抄代码要先换名**；书稿更新后此提示作废，复核清单见 SKILL.md §9。 |
 
 ---
 
@@ -328,7 +328,7 @@ S |> nest(.by = 年份) |>
 
 - `LQ()` 每组第一行须为"全国合计"行（`\details` 写明并点名 "silently wrong"）——护栏（`check=`）未加，按契约用；
 - `weight_entropy()$s` 是 0–100（`\value` 写明 `scaled by 100`）；
-- `basic_SBM()` 不接受 `orientation`（设计如此；`mathmodels-book` 的 `dea.qmd` 需改书稿）。
+- `basic_SBM()` 不接受 `orientation`（设计如此；`mathmodels-book` 的 `dea.qmd` 需改书稿，截至 2026-10 快照尚未改）。
 
 **`super_DEA` 不可行分支的复现结论（2026-10-11 已闭环）**：作者初版记为"复现不出"，
 拿到上面的 6 行最小复现后**一次命中**，并更正为"可确定性复现"，同时说明了原搜索设计
