@@ -54,7 +54,8 @@
    会得到 `NULL`，后续静默出错。
 2. **`basic_SBM()` 在 v0.0.14 是非导向模型，不能传 `orientation`**，否则报
    `SBM models are non-oriented; 'orientation' is not applicable.`
-   ⚠️ `mathmodels-book` 的 `dea.qmd`（截至 2026-10 的书稿快照）里传了 `orientation = "oo"`，**照抄会报错**。
+   ⚠️ 非期望产出要写成 `ud_outputs = <在 outputs 中的第几列>`；从任何素材抄 SBM 调用时，
+   先确认没带 `orientation`。
 3. **DEA 家族的 `data` 必须是 data.frame 且第 1 列是 DMU 名**，传 `matrix` 直接报错；
    读中文列名 CSV 要 `check.names = FALSE`，否则括号会被换成点。
 4. **超效率返回的 NA 要显式补齐**（本案例 `io + vrs` 下 2 个 DMU 无可行解），否则排名不全。

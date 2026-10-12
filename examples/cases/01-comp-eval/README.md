@@ -29,8 +29,8 @@
 `weight_entropy` · `weight_critic` · `weight_cv` · `AHP` · `combine_weights` ·
 `linear_sum` · `topsis` · `rescale`
 
-> `weight_entropy` / `weight_critic` / `weight_cv` 在书稿与建模文章里**都没有正确示例**，
-> 这是本案例的重点覆盖对象。
+> `weight_entropy` / `weight_critic` / `weight_cv` 在常用素材（书稿、建模文章）里**缺少可直接
+> 运行的示例**，这是本案例的重点覆盖对象。
 
 ## 流程
 
