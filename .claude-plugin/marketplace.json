@@ -1,0 +1,16 @@
+{
+  "name": "mathmodels-r",
+  "owner": { "name": "zhjx19", "url": "https://github.com/zhjx19" },
+  "metadata": { "description": "Marketplace hosting the mathmodels-r plugin." },
+  "plugins": [
+    {
+      "name": "mathmodels-r",
+      "description": "本机 R + mathmodels 包的数学建模算力层：环境自检、方法选型、可复现 run 目录（脚本/日志/表格/图/sessionInfo）",
+      "version": "1.0.0",
+      "author": { "name": "zhjx19", "url": "https://github.com/zhjx19" },
+      "source": "./",
+      "category": "productivity",
+      "homepage": "https://github.com/zhjx19/mathmodels-r"
+    }
+  ]
+}
