@@ -57,9 +57,9 @@ Rscript --vanilla <skill>/scripts/check_env.R
 cairo_pdf、系统中文字体、中文字面量解析、flextable）。任一 `[!!]` 先按提示修复，
 **不要带着红色自检结果往下做**。
 
-若 `Rscript` 不在 PATH：`run_r.sh` 会自动按 `$MMR_RSCRIPT` → `D:/R-4.6.1/bin/Rscript.exe`
-→ `C:/Program Files/R/R-*/bin/Rscript.exe`（版本降序）查找。换机器只需
-`export MMR_RSCRIPT=...`。
+若 `Rscript` 不在 PATH：`run_r.sh` 会自动按 `$MMR_RSCRIPT` → 常见安装路径 → `PATH`
+上的 `Rscript` 查找。**候选清单与顺序只写在脚本的 `find_rscript()` 里（唯一一处）**，
+本文不复制本机绝对路径，以免两处说法不一致。换机器只需 `export MMR_RSCRIPT=...`。
 
 ---
 

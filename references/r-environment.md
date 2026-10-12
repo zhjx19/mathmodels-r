@@ -8,18 +8,18 @@
 
 优先级：`$MMR_RSCRIPT` → 常见安装路径扫描 → `PATH` 上的 `Rscript`。
 
-本机路径：
+**候选清单与顺序只写在 `scripts/run_r.sh` 的 `find_rscript()` 里（唯一一处）**；本文
+不再复制本机绝对路径——两处都写，改一处忘一处就会自相矛盾。
 
-```
-D:/R-4.6.1/bin/Rscript.exe
-```
-
-`run_r.sh` 已内置该路径为首选，并在 `C:/Program Files/R/R-*/bin/Rscript.exe`
-里按版本号降序兜底。换机器只用设一个环境变量，不必改脚本：
+`run_r.sh` 以本机常见安装位置为首选，并在 `<R 根>/R-*/bin/Rscript.exe` 里按版本号降序
+兜底。换机器只用设一个环境变量，不必改脚本：
 
 ```bash
 export MMR_RSCRIPT="/c/Program Files/R/R-4.5.0/bin/Rscript.exe"
 ```
+
+想知道当前实际用的是哪个 R：跑 `Rscript --vanilla scripts/check_env.R`，
+第一行便是 R 版本；run 目录里 `meta.txt` 的 `rscript:` 行记录了实际调用的可执行文件。
 
 ## 2. ★ LC_* 地雷（本 skill 存在的主要理由）
 
@@ -96,7 +96,8 @@ cat(line, "\n", sep = "", file = logfile, append = TRUE, useBytes = TRUE)
 
 ## 6. 其他实测事实
 
-- R 4.6.1 (ucrt)，`.libPaths()` = `D:/R-4.6.1/library`，`mathmodels` 0.0.14 已装。
+- R 4.6.1 (ucrt)，`mathmodels` 0.0.14 已装（`.libPaths()`、R 版本与包版本一律以
+  `Rscript --vanilla scripts/check_env.R` 的输出为准，本文不复制本机库路径）。
 - 22 个 Imports 依赖全部就绪（见 `check_env.R` 的自检输出）。
 - `capabilities("cairo")` = TRUE，故 `cairo_pdf` 可用。
 - 包级 startup 的 `Setting LC_* failed` 警告在清掉环境变量后**不再出现**；

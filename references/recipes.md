@@ -310,9 +310,9 @@ S |> nest(.by = 年份) |>
 
 > 2026-10-11：对本机 `mathmodels 0.0.14` 做过一次"陷阱是不是包的缺陷"的系统评估
 > （读 `asNamespace` 源码 + Rd 原文 + 实测三对照），并向作者提交了逐行补丁建议。
-> **下列问题已在 0.0.14 的工作树中修复并重新安装**——本机安装路径
-> `D:/R-4.6.1/library/mathmodels`，`packageVersion()` 仍是 `0.0.14`；作者侧
-> `devtools::test()` 519 块 / 1436 条断言 **0 失败**、`devtools::check()` **0 error / 0 warning / 0 note**。
+> **下列问题已在 0.0.14 的工作树中修复并重新安装**——本机 `packageVersion()` 仍是
+> `0.0.14`（安装位置与库路径以 `Rscript --vanilla scripts/check_env.R` 的输出为准）；
+> 作者侧 `devtools::test()` 519 块 / 1436 条断言 **0 失败**、`devtools::check()` **0 error / 0 warning / 0 note**。
 > 本技能已按修后行为校正，下表留作历史与版本辨识用。
 
 | 位置 | 原现象 | 修后行为（本机实测） |
