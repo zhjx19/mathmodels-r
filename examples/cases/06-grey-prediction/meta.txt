@@ -1,5 +1,5 @@
 script: script.R
 rscript: D:/R-4.6.1/bin/Rscript.exe
 exit_code: 0
-started: 2026-10-12 10:47:23
-elapsed_sec: 5
+started: 2026-10-12 11:10:07
+elapsed_sec: 10

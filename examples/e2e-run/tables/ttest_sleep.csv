@@ -1,0 +1,2 @@
+﻿"variable","n_used","n_dropped","estimate","estimate1","estimate2","statistic","df","p.value","conf_low","conf_high","effect","method","alternative","p.adjusted","sig"
+"extra",20,0,-1.58,0.75,2.33,-1.860813,17.776474,0.079394,-3.365483,0.205483,-0.832181,"Welch Two Sample t-test","two.sided",0.079394,"."

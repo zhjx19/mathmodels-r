@@ -1,26 +1,26 @@
-- [23:30:31] INFO 第一步：多指标综合评价
-- [23:30:31] INFO 表格 -> tables/topsis_ranking.csv  20 行 x 4 列
-- [23:30:31] INFO 表格 -> tables/entropy_weights.csv  4 行 x 2 列
-- [23:30:31] INFO TOPSIS 最优对象：R11，得分 100
-- [23:30:32] INFO 图形 -> figs/topsis_scores.png
-- [23:30:33] INFO 图形 -> figs/topsis_scores.pdf
-- [23:30:33] INFO 第二步：SIR 传染病模型
-- [23:30:33] INFO 表格 -> tables/sir_metrics.csv  4 行 x 2 列
-- [23:30:33] INFO R0 = 1.5；峰值 69.7 人，出现在第 65 天
-- [23:30:34] INFO 图形 -> figs/sir_compartments.png
-- [23:30:34] INFO 图形 -> figs/sir_compartments.pdf
-- [23:30:35] INFO 图形 -> figs/sir_incidence.png
-- [23:30:35] INFO 图形 -> figs/sir_incidence.pdf
-- [23:30:35] INFO 第三步：国际航空客运量预测
+- [11:10:20] INFO 第一步：多指标综合评价
+- [11:10:20] INFO 表格 -> tables/topsis_ranking.csv  20 行 x 4 列
+- [11:10:20] INFO 表格 -> tables/entropy_weights.csv  4 行 x 2 列
+- [11:10:20] INFO TOPSIS 最优对象：R11，得分 100
+- [11:10:21] INFO 图形 -> figs/topsis_scores.png
+- [11:10:21] INFO 图形 -> figs/topsis_scores.pdf
+- [11:10:21] INFO 第二步：SIR 传染病模型
+- [11:10:21] INFO 表格 -> tables/sir_metrics.csv  4 行 x 2 列
+- [11:10:21] INFO R0 = 1.5；峰值 69.7 人，出现在第 65 天
+- [11:10:22] INFO 图形 -> figs/sir_compartments.png
+- [11:10:23] INFO 图形 -> figs/sir_compartments.pdf
+- [11:10:24] INFO 图形 -> figs/sir_incidence.png
+- [11:10:25] INFO 图形 -> figs/sir_incidence.pdf
+- [11:10:25] INFO 第三步：国际航空客运量预测
 Registered S3 method overwritten by 'quantmod':
   method            from
   as.zoo.data.frame zoo 
-- [23:30:35] INFO 表格 -> tables/ts_stationarity.csv  2 行 x 5 列
-- [23:30:38] INFO 表格 -> tables/sarima_forecast.csv  12 行 x 4 列
-- [23:30:39] INFO 图形 -> figs/sarima_forecast.png
-- [23:30:39] INFO 图形 -> figs/sarima_forecast.pdf
-- [23:30:39] INFO 第四步：统计推断
-- [23:30:39] INFO 表格 -> tables/ttest_sleep.csv  1 行 x 16 列
-- [23:30:39] INFO t 检验 p 值 = 0.07939
+- [11:10:25] INFO 表格 -> tables/ts_stationarity.csv  2 行 x 5 列
+- [11:10:32] INFO 表格 -> tables/sarima_forecast.csv  12 行 x 4 列
+- [11:10:34] INFO 图形 -> figs/sarima_forecast.png
+- [11:10:35] INFO 图形 -> figs/sarima_forecast.pdf
+- [11:10:35] INFO 第四步：统计推断
+- [11:10:35] INFO 表格 -> tables/ttest_sleep.csv  1 行 x 16 列
+- [11:10:35] INFO t 检验 p 值 = 0.07939
 
-[mmr] 完成：6 表, 8 图, 耗时 9.5s
+[mmr] 完成：6 表, 8 图, 耗时 15.7s

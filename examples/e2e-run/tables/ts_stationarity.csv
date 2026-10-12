@@ -1,0 +1,3 @@
+﻿"test","null_hypothesis","statistic","p_value","conclusion"
+"ADF","Unit root present (non-stationary)",-6.421458,0.01,"Stationary"
+"KPSS","Series is stationary",2.828675,0.01,"Non-stationary"
